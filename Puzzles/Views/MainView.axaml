@@ -4,5 +4,21 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Puzzles.Views.MainView">
-  Welcome to Avalonia!
+	<Grid  Margin="20"
+		ColumnDefinitions="0.36* 0.64*" RowDefinitions="25 *">
+		<Border Classes="HeaderBorder">
+			<TextBlock Text="Панель блоков"/>
+		</Border>
+		<Border Classes="HeaderBorder"
+				Grid.Row="0" Grid.Column="1">
+			<TextBlock Text="Панель блоков"/>
+		</Border>
+		<Border Classes="HeaderBorder"
+				 Grid.Row="1" Grid.Column="0">			
+		</Border>
+		<Border Classes="HeaderBorder"
+				 Grid.Row="1" Grid.Column="1">
+			
+		</Border>
+	</Grid>
 </UserControl>
