@@ -10,7 +10,10 @@
     </Application.DataTemplates>
   
     <Application.Styles>
+		
         <FluentTheme />
 		<StyleInclude Source="/Assets/Styles/BorderStyles.axaml"/>
+		<StyleInclude Source="/CustomControls/PuzzlePiece.axaml"/>
+		
     </Application.Styles>
 </Application>

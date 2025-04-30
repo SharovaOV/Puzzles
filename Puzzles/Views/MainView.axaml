@@ -2,7 +2,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:Puzzles.CustomControls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 xmlns:vm="using:Puzzles.ViewModels"
+			 x:DataType="vm:MainViewModel"
              x:Class="Puzzles.Views.MainView">
 	<Grid  Margin="20"
 		ColumnDefinitions="0.36* 0.64*" RowDefinitions="25 *">
@@ -13,8 +16,12 @@
 				Grid.Row="0" Grid.Column="1">
 			<TextBlock Text="Панель блоков"/>
 		</Border>
-		<Border Classes="HeaderBorder"
-				 Grid.Row="1" Grid.Column="0">			
+		<Border Name="Blocks" Classes="HeaderBorder"
+				 Grid.Row="1" Grid.Column="0">
+			<StackPanel Margin="15">
+				<controls:PuzzlePiece TabFill="BlueViolet" Stroke="Red" StrokeThickness="1"
+								  PieceForm="None Tab" Width="200" Height="120" CornerRadius="10"/>
+			</StackPanel>
 		</Border>
 		<Border Classes="HeaderBorder"
 				 Grid.Row="1" Grid.Column="1">
