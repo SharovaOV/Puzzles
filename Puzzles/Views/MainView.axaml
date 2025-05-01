@@ -19,8 +19,8 @@
 		<Border Name="Blocks" Classes="HeaderBorder"
 				 Grid.Row="1" Grid.Column="0">
 			<StackPanel Margin="15">
-				<controls:PuzzlePiece TabFill="BlueViolet" Stroke="Red" StrokeThickness="1"
-								  PieceForm="Slot Slot Tab Tab " Width="200" Height="120" CornerRadius="10"/>
+				<controls:PuzzlePiece Classes = "Leading" TabFill="BlueViolet" Stroke="Red" StrokeThickness="3"/>
+				<controls:PuzzlePiece Classes = "Slave" TabFill="LightGreen" Stroke="Red" StrokeThickness="3"/>
 			</StackPanel>
 		</Border>
 		<Border Classes="HeaderBorder"

@@ -111,7 +111,7 @@ public class PuzzlePiece : TemplatedControl
     {
         var data = new StreamGeometry();
         double topPoint = 50;
-        double leftPoint = 90;
+        double leftPoint = 40;
         double segmentSize = 20;
         //double halfSegment = Math.Min(this.Bounds.Height, this.Bounds.Height) / 2;
         if (PieceForm is null) return null;
