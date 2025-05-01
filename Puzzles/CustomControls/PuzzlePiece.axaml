@@ -19,7 +19,7 @@
 							  Fill="{TemplateBinding TabFill}"
 							  Stroke="{TemplateBinding Stroke}"
 							  />
-						<TextBlock Text="{TemplateBinding Text}"
+						<TextBox Text="{TemplateBinding Text}"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
                                    TextWrapping="Wrap"

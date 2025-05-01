@@ -19,10 +19,8 @@ public class PuzzlePiece : TemplatedControl
     private Canvas? _parentCanvas;
     private Border? _dragHandle;
     private Path? _pazzlePath;
-
-
-
-
+    private double _yStart;
+    private double _yEnd;
     public static readonly StyledProperty<IBrush> TabFillProperty =
         AvaloniaProperty.Register<PuzzlePiece, IBrush>(nameof(TabFill), Brushes.Violet);
 
@@ -112,7 +110,7 @@ public class PuzzlePiece : TemplatedControl
     private Geometry CreatePathData()
     {
         var data = new StreamGeometry();
-        double topPoint = 100;
+        double topPoint = 50;
         double leftPoint = 90;
         double segmentSize = 20;
         //double halfSegment = Math.Min(this.Bounds.Height, this.Bounds.Height) / 2;
@@ -133,55 +131,134 @@ public class PuzzlePiece : TemplatedControl
 
     private void CreateTopEdge(StreamGeometryContext ctx, double leftPoint, double segmentSize)
     {
-        double startX =(PieceForm.Left == Enums.EdgeType.None || PieceForm.Top == Enums.EdgeType.None)?CornerRadius.TopLeft : 0;
-        double yStart = (PieceForm.Top == Enums.EdgeType.Slot) ? 0.5 * segmentSize : 0;
-        ctx.BeginFigure(new Point(startX, yStart), true);
-        ctx.LineTo(new Point(leftPoint, yStart));
+        double startX =(PieceForm.Left == Enums.EdgeType.None || PieceForm.Top == Enums.EdgeType.None)?CornerRadius.TopLeft : 0.5 * segmentSize;
+        _yStart = 0.5 * segmentSize;
+        ctx.BeginFigure(new Point(startX, _yStart), true);
+        ctx.LineTo(new Point(leftPoint, _yStart));
         if(PieceForm.Top == Enums.EdgeType.Tab)
         {
-            ctx.LineTo(new Point(leftPoint + 0.5 * segmentSize - RADIUS_SLOT_CORNER, yStart + 0.5 * segmentSize - RADIUS_SLOT_CORNER));
+            ctx.LineTo(new Point(leftPoint + 0.5 * segmentSize - 0.5 * RADIUS_SLOT_CORNER, _yStart + 0.5 * segmentSize - 0.5 * RADIUS_SLOT_CORNER));
             ctx.ArcTo(
-                new Point(leftPoint + 0.5 * segmentSize - RADIUS_SLOT_CORNER, yStart + 0.5 * segmentSize - RADIUS_SLOT_CORNER),
-                new Size(2*RADIUS_SLOT_CORNER, RADIUS_SLOT_CORNER),
-                0,false, SweepDirection.Clockwise
+                new Point(leftPoint + 0.5 * segmentSize + 0.5 * RADIUS_SLOT_CORNER, _yStart + 0.5 * segmentSize - 0.5 * RADIUS_SLOT_CORNER),
+            
+                new Size(RADIUS_SLOT_CORNER, RADIUS_SLOT_CORNER),
+                0,false, SweepDirection.CounterClockwise
                 );
-            ctx.LineTo(new Point(leftPoint +  segmentSize, yStart));
+            ctx.LineTo(new Point(leftPoint +  segmentSize, _yStart));
         }
         else if(PieceForm.Top == Enums.EdgeType.Slot)
         {
-            ctx.LineTo(new Point(leftPoint + 0.5 * segmentSize - RADIUS_SLOT_CORNER, yStart - 0.5 * segmentSize + RADIUS_SLOT_CORNER));
+            ctx.LineTo(new Point(leftPoint + 0.5 * segmentSize - 0.5 * RADIUS_SLOT_CORNER, _yStart - 0.5 * segmentSize + 0.5 * RADIUS_SLOT_CORNER));
             ctx.ArcTo(
-                new Point(leftPoint + 0.5 * segmentSize - RADIUS_SLOT_CORNER, yStart - 0.5 * segmentSize + RADIUS_SLOT_CORNER),
-                new Size(2*RADIUS_SLOT_CORNER, RADIUS_SLOT_CORNER),
+                new Point(leftPoint + 0.5 * segmentSize + 0.5 * RADIUS_SLOT_CORNER, _yStart - 0.5 * segmentSize + 0.5 * RADIUS_SLOT_CORNER),
+                new Size(RADIUS_SLOT_CORNER, RADIUS_SLOT_CORNER),
                 0,false, SweepDirection.Clockwise
                 );
-            ctx.LineTo(new Point(leftPoint +  segmentSize, yStart));
+            ctx.LineTo(new Point(leftPoint +  segmentSize, _yStart));
         }
 
         //if() Логика скругления
-        ctx.LineTo(new Point(this.Bounds.Width, yStart));
+        ctx.LineTo(new Point(this.Bounds.Width-0.5*segmentSize, _yStart));
     }
 
     private void CreateRightEdge(StreamGeometryContext ctx, double topPoint, double segmentSize)
-    {   
-        ctx.LineTo(new Point(this.Bounds.Width, this.Bounds.Height));
+    {
+        double x = this.Bounds.Width - (0.5 * segmentSize);
+        ctx.LineTo(new Point(x, topPoint));
+        if (PieceForm.Right == Enums.EdgeType.Tab)
+        {
+            ctx.LineTo(new Point(x - 0.5 * segmentSize + 0.5 * RADIUS_SLOT_CORNER, topPoint + 0.5 * segmentSize - 0.5 * RADIUS_SLOT_CORNER));
+            ctx.ArcTo(
+                new Point(x - 0.5 * segmentSize + 0.5 * RADIUS_SLOT_CORNER, topPoint + 0.5 * segmentSize + 0.5 * RADIUS_SLOT_CORNER),
+
+                new Size(RADIUS_SLOT_CORNER, RADIUS_SLOT_CORNER),
+                0, false, SweepDirection.CounterClockwise
+                );
+            ctx.LineTo(new Point(x, topPoint+ segmentSize));
+        }
+        else if (PieceForm.Right == Enums.EdgeType.Slot)
+        {
+            ctx.LineTo(new Point(x + 0.5 * segmentSize - 0.5 * RADIUS_SLOT_CORNER, topPoint + 0.5 * segmentSize - 0.5 * RADIUS_SLOT_CORNER));
+            ctx.ArcTo(
+                new Point(x + 0.5 * segmentSize - 0.5 * RADIUS_SLOT_CORNER, topPoint + 0.5 * segmentSize + 0.5 * RADIUS_SLOT_CORNER),
+
+                new Size(RADIUS_SLOT_CORNER, RADIUS_SLOT_CORNER),
+                0, false, SweepDirection.Clockwise
+                );
+            ctx.LineTo(new Point(x, topPoint + segmentSize));
+
+        }
+        ctx.LineTo(new Point(x, this.Bounds.Height-0.5*segmentSize));
     }
 
     private void CreateBottomEdge(StreamGeometryContext ctx, double leftPoint, double segmentSize)
-    {   
-        ctx.LineTo(new Point(0, this.Bounds.Height));
+    {
+        _yEnd = this.Bounds.Height - 0.5 * segmentSize;
+        ctx.LineTo(new Point(leftPoint + segmentSize, _yEnd));
+        if (PieceForm.Bottom == Enums.EdgeType.Tab)
+        {
+            ctx.LineTo(new Point(leftPoint + 0.5 * segmentSize + 0.5 * RADIUS_SLOT_CORNER, _yEnd - 0.5 * segmentSize + 0.5 * RADIUS_SLOT_CORNER));
+            ctx.ArcTo(
+                new Point(leftPoint + 0.5 * segmentSize - 0.5 * RADIUS_SLOT_CORNER, _yEnd - 0.5 * segmentSize + 0.5 * RADIUS_SLOT_CORNER),
+                new Size(2*RADIUS_SLOT_CORNER, 2*RADIUS_SLOT_CORNER),
+                0, false, SweepDirection.CounterClockwise
+                );
+            ctx.LineTo(new Point(leftPoint, _yEnd));
+        }
+        else if (PieceForm.Bottom == Enums.EdgeType.Slot)
+        {
+            ctx.LineTo(new Point(leftPoint + 0.5 * segmentSize + 0.5 * RADIUS_SLOT_CORNER, _yEnd + 0.5 * segmentSize - 0.5 * RADIUS_SLOT_CORNER));
+            ctx.ArcTo(
+                new Point(leftPoint + 0.5 * segmentSize - 0.5 * RADIUS_SLOT_CORNER, _yEnd + 0.5 * segmentSize - 0.5 * RADIUS_SLOT_CORNER),
+                new Size(RADIUS_SLOT_CORNER, RADIUS_SLOT_CORNER),
+                0, false, SweepDirection.Clockwise
+                );
+            ctx.LineTo(new Point(leftPoint, _yEnd));
+        }
+        if(PieceForm.Left == Enums.EdgeType.None || PieceForm.Bottom == Enums.EdgeType.None)
+        {
+            ctx.LineTo(new Point(0.5 * segmentSize + this.CornerRadius.BottomLeft, _yEnd));
+            ctx.ArcTo(new Point(0.5 * segmentSize , _yEnd - CornerRadius.BottomLeft),
+                    new Size(this.CornerRadius.TopLeft, this.CornerRadius.TopLeft),
+                    0, false, SweepDirection.Clockwise);
+        }
+        else
+            ctx.LineTo(new Point(0.5 * segmentSize, _yEnd));
     }
     private void CreateLeftEdge(StreamGeometryContext ctx, double topPoint, double segmentSize)
     {
-        double endY = PieceForm.Top == Enums.EdgeType.Slot ? 0.5 * segmentSize : 0;
+        double endY =  _yStart;
         endY += (PieceForm.Left == Enums.EdgeType.None || PieceForm.Top == Enums.EdgeType.None) ? 
             CornerRadius.TopLeft :0;
+        ctx.LineTo(new Point(0.5 * segmentSize, topPoint + segmentSize));
+        if (PieceForm.Left == Enums.EdgeType.Tab)
+        {
+            ctx.LineTo(new Point(segmentSize - 0.5 * RADIUS_SLOT_CORNER, topPoint + 0.5 * segmentSize + 0.5 * RADIUS_SLOT_CORNER));
+            ctx.ArcTo(
+                new Point(segmentSize - 0.5 * RADIUS_SLOT_CORNER, topPoint + 0.5 * segmentSize - 0.5 * RADIUS_SLOT_CORNER),
 
-        ctx.LineTo(new Point(0, endY));
+                new Size(RADIUS_SLOT_CORNER, RADIUS_SLOT_CORNER),
+                0, false, SweepDirection.CounterClockwise
+                );
+            ctx.LineTo(new Point(0.5 * segmentSize, topPoint));
+        }
+        else if(PieceForm.Left == Enums.EdgeType.Slot)
+        {
+            ctx.LineTo(new Point( 0.5 * RADIUS_SLOT_CORNER, topPoint + 0.5 * segmentSize + 0.5 * RADIUS_SLOT_CORNER));
+            ctx.ArcTo(
+                new Point( 0.5 * RADIUS_SLOT_CORNER, topPoint + 0.5 * segmentSize - 0.5 * RADIUS_SLOT_CORNER),
+
+                new Size(RADIUS_SLOT_CORNER, RADIUS_SLOT_CORNER),
+                0, false, SweepDirection.Clockwise
+                );
+            ctx.LineTo(new Point(0.5 * segmentSize, topPoint));
+
+        }
+            ctx.LineTo(new Point(0.5 * segmentSize, endY));
         if (PieceForm.Left == Enums.EdgeType.None || PieceForm.Top == Enums.EdgeType.None)
         {
-            ctx.ArcTo(new Point(0, endY),
-                     new Size(2*this.CornerRadius.TopLeft, this.CornerRadius.TopLeft),
+            ctx.ArcTo(new Point(0.5*segmentSize + this.CornerRadius.TopLeft, _yStart),
+                     new Size(this.CornerRadius.TopLeft, this.CornerRadius.TopLeft),
                      0, false, SweepDirection.Clockwise);
         }
     }

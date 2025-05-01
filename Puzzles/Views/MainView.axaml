@@ -20,7 +20,7 @@
 				 Grid.Row="1" Grid.Column="0">
 			<StackPanel Margin="15">
 				<controls:PuzzlePiece TabFill="BlueViolet" Stroke="Red" StrokeThickness="1"
-								  PieceForm="None Tab" Width="200" Height="120" CornerRadius="10"/>
+								  PieceForm="Slot Slot Tab Tab " Width="200" Height="120" CornerRadius="10"/>
 			</StackPanel>
 		</Border>
 		<Border Classes="HeaderBorder"
