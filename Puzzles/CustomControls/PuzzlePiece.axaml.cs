@@ -41,9 +41,9 @@ public class PuzzlePiece : TemplatedControl
    
     public static readonly StyledProperty<PieceConfig> PieceFormProperty =
         AvaloniaProperty.Register<PuzzlePiece, PieceConfig>(nameof(PieceForm),
-            new PieceConfig(Enums.EdgeType.Slot),
+            new PieceConfig(Enums.EdgeType.Tab),
             validate: v => v != null,
-            coerce: (_, value) => value ?? new PieceConfig(Enums.EdgeType.Slot)
+            coerce: (_, value) => value ?? new PieceConfig(Enums.EdgeType.Tab)
            );
 
     
@@ -146,7 +146,7 @@ public class PuzzlePiece : TemplatedControl
         _yStart = 0.5 * segmentSize;
         ctx.BeginFigure(new Point(startX, _yStart), true);
         ctx.LineTo(new Point(leftPoint, _yStart));
-        if(PieceForm.Top == Enums.EdgeType.Tab)
+        if(PieceForm.Top == Enums.EdgeType.Slot)
         {
             ctx.LineTo(new Point(leftPoint + 0.5 * segmentSize - 0.5 * RADIUS_SLOT_CORNER, _yStart + 0.5 * segmentSize - 0.5 * RADIUS_SLOT_CORNER));
             ctx.ArcTo(
@@ -157,7 +157,7 @@ public class PuzzlePiece : TemplatedControl
                 );
             ctx.LineTo(new Point(leftPoint +  segmentSize, _yStart));
         }
-        else if(PieceForm.Top == Enums.EdgeType.Slot)
+        else if(PieceForm.Top == Enums.EdgeType.Tab)
         {
             ctx.LineTo(new Point(leftPoint + 0.5 * segmentSize - 0.5 * RADIUS_SLOT_CORNER, _yStart - 0.5 * segmentSize + 0.5 * RADIUS_SLOT_CORNER));
             ctx.ArcTo(
@@ -176,7 +176,7 @@ public class PuzzlePiece : TemplatedControl
     {
         double x = this.Bounds.Width - (0.5 * segmentSize);
         ctx.LineTo(new Point(x, topPoint));
-        if (PieceForm.Right == Enums.EdgeType.Tab)
+        if (PieceForm.Right == Enums.EdgeType.Slot)
         {
             ctx.LineTo(new Point(x - 0.5 * segmentSize + 0.5 * RADIUS_SLOT_CORNER, topPoint + 0.5 * segmentSize - 0.5 * RADIUS_SLOT_CORNER));
             ctx.ArcTo(
@@ -187,7 +187,7 @@ public class PuzzlePiece : TemplatedControl
                 );
             ctx.LineTo(new Point(x, topPoint+ segmentSize));
         }
-        else if (PieceForm.Right == Enums.EdgeType.Slot)
+        else if (PieceForm.Right == Enums.EdgeType.Tab)
         {
             ctx.LineTo(new Point(x + 0.5 * segmentSize - 0.5 * RADIUS_SLOT_CORNER, topPoint + 0.5 * segmentSize - 0.5 * RADIUS_SLOT_CORNER));
             ctx.ArcTo(
@@ -206,7 +206,7 @@ public class PuzzlePiece : TemplatedControl
     {
         _yEnd = this.Bounds.Height - 0.5 * segmentSize;
         ctx.LineTo(new Point(leftPoint + segmentSize, _yEnd));
-        if (PieceForm.Bottom == Enums.EdgeType.Tab)
+        if (PieceForm.Bottom == Enums.EdgeType.Slot)
         {
             ctx.LineTo(new Point(leftPoint + 0.5 * segmentSize + 0.5 * RADIUS_SLOT_CORNER, _yEnd - 0.5 * segmentSize + 0.5 * RADIUS_SLOT_CORNER));
             ctx.ArcTo(
@@ -216,7 +216,7 @@ public class PuzzlePiece : TemplatedControl
                 );
             ctx.LineTo(new Point(leftPoint, _yEnd));
         }
-        else if (PieceForm.Bottom == Enums.EdgeType.Slot)
+        else if (PieceForm.Bottom == Enums.EdgeType.Tab)
         {
             ctx.LineTo(new Point(leftPoint + 0.5 * segmentSize + 0.5 * RADIUS_SLOT_CORNER, _yEnd + 0.5 * segmentSize - 0.5 * RADIUS_SLOT_CORNER));
             ctx.ArcTo(
@@ -242,7 +242,7 @@ public class PuzzlePiece : TemplatedControl
         endY += (PieceForm.Left == Enums.EdgeType.None || PieceForm.Top == Enums.EdgeType.None) ? 
             CornerRadius.TopLeft :0;
         ctx.LineTo(new Point(0.5 * segmentSize, topPoint + segmentSize));
-        if (PieceForm.Left == Enums.EdgeType.Tab)
+        if (PieceForm.Left == Enums.EdgeType.Slot)
         {
             ctx.LineTo(new Point(segmentSize - 0.5 * RADIUS_SLOT_CORNER, topPoint + 0.5 * segmentSize + 0.5 * RADIUS_SLOT_CORNER));
             ctx.ArcTo(
@@ -253,7 +253,7 @@ public class PuzzlePiece : TemplatedControl
                 );
             ctx.LineTo(new Point(0.5 * segmentSize, topPoint));
         }
-        else if(PieceForm.Left == Enums.EdgeType.Slot)
+        else if(PieceForm.Left == Enums.EdgeType.Tab)
         {
             ctx.LineTo(new Point( 0.5 * RADIUS_SLOT_CORNER, topPoint + 0.5 * segmentSize + 0.5 * RADIUS_SLOT_CORNER));
             ctx.ArcTo(

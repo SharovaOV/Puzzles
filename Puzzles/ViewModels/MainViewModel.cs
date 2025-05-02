@@ -11,6 +11,6 @@ namespace Puzzles.ViewModels
     public partial class MainViewModel : ViewModelBase
     {
         [ObservableProperty]
-        private PieceConfig _mainPiece = new(Enums.EdgeType.None, Enums.EdgeType.Slot, Enums.EdgeType.None, Enums.EdgeType.None);
+        private PieceConfig _mainPiece = new(Enums.EdgeType.None, Enums.EdgeType.Tab, Enums.EdgeType.None, Enums.EdgeType.None);
     }
 }

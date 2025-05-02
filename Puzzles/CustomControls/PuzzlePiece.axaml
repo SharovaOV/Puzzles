@@ -57,14 +57,14 @@
 	</Style>
 
 	<Style Selector="controls|PuzzlePiece.Leading">
-		<Setter Property="PieceForm" Value="None Tab Tab Slot"/>
+		<Setter Property="PieceForm" Value="None Slot Slot Tab"/>
 		<Setter Property="CornerRadius" Value="10"/>
 		<Style Selector="^ TextBlock">
 			<Setter Property="Foreground" Value="White"/>
 			</Style>
 	</Style> 
 	<Style Selector="controls|PuzzlePiece.Slave">
-		<Setter Property="PieceForm" Value="Slot None None None"/>
+		<Setter Property="PieceForm" Value="Tab None None None"/>
 
 		<Style Selector="^ TextBlock">
 			<Setter Property="Foreground" Value="White"/>

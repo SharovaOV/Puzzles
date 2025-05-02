@@ -9,7 +9,7 @@ namespace Puzzles.Enums
     public enum EdgeType
     {
         None = 0,
-        Tab = 1,
-        Slot = 2
+        Slot = 1,
+        Tab = 2
     }
 }

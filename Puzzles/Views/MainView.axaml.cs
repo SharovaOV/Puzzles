@@ -27,6 +27,23 @@ public partial class MainView : UserControl
             CloneAndDrag(puzzlePiece, e);
         }
         e.Handled = true;
+    } 
+
+    private void Clone_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (sender is PuzzlePiece puzzlePiece)
+        {
+            WorkCanvas.Children.Remove(puzzlePiece);
+            Canvas.SetLeft(puzzlePiece, 2*Blocks.Margin.Left + Blocks.Bounds.Width + puzzlePiece.Bounds.Left);
+            Canvas.SetTop(puzzlePiece, puzzlePiece.Bounds.Top);
+
+            // Добавляем на Canvas
+            MainCanvas.Children.Add(puzzlePiece);
+
+            // Начинаем перетаскивание копии
+            StartDrag(puzzlePiece, e);
+        }
+        e.Handled = true;
     }
 
     private void CloneAndDrag(PuzzlePiece original, PointerPressedEventArgs e)
@@ -41,15 +58,8 @@ public partial class MainView : UserControl
             //Background = original.Background,
             PieceForm = original.PieceForm.Clone()            
         };
-
+        clone.PointerPressed += Clone_OnPointerPressed;
         clone.Classes.AddRange(original.Classes.Where(x => !x.StartsWith(":")));
-
-        //foreach (var className in original.Classes)
-        //{
-        //    if (className.StartsWith(":")) continue;
-        //    clone.Classes.Add(className);
-        //}
-
 
         // Устанавливаем позицию рядом с оригиналом
         Canvas.SetLeft(clone, Blocks.Margin.Left + BlocksPanel.Margin.Left + original.Bounds.Left + 20);
@@ -57,8 +67,6 @@ public partial class MainView : UserControl
 
         // Добавляем на Canvas
         MainCanvas.Children.Add(clone);
-        MainCanvas.PointerMoved += MainCanvas_PointerMoved;
-        MainCanvas.PointerReleased += MainCanvas_PointerReleased;
 
         // Начинаем перетаскивание копии
         StartDrag(clone, e);
@@ -72,9 +80,11 @@ public partial class MainView : UserControl
         if (clone is IInputElement inputElement)
         {
             // захват курсора
-            e.Pointer.Capture(inputElement);
-            
-                clone.Classes.Add("dragging");
+            e.Pointer.Capture(inputElement);            
+            clone.Classes.Add("dragging");
+
+            MainCanvas.PointerMoved += MainCanvas_PointerMoved;
+            MainCanvas.PointerReleased += MainCanvas_PointerReleased;
         }
         else
         {
