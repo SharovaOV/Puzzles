@@ -7,8 +7,10 @@
 			 xmlns:vm="using:Puzzles.ViewModels"
 			 x:DataType="vm:MainViewModel"
              x:Class="Puzzles.Views.MainView">
+	
 	<Grid  Margin="20"
-		ColumnDefinitions="0.36* 0.64*" RowDefinitions="25 *">
+		ColumnDefinitions="auto *" RowDefinitions="25 * 60">
+		
 		<Border Classes="HeaderBorder">
 			<TextBlock Text="Панель блоков"/>
 		</Border>
@@ -17,15 +19,36 @@
 			<TextBlock Text="Панель блоков"/>
 		</Border>
 		<Border Name="Blocks" Classes="HeaderBorder"
-				 Grid.Row="1" Grid.Column="0">
-			<StackPanel Margin="15">
-				<controls:PuzzlePiece Classes = "Leading" TabFill="BlueViolet" Stroke="Red" StrokeThickness="3"/>
-				<controls:PuzzlePiece Classes = "Slave" TabFill="LightGreen" Stroke="Red" StrokeThickness="3"/>
+				 Grid.Row="1" Grid.Column="0" Grid.RowSpan="2">
+			<StackPanel Name="BlocksPanel" Margin="15">
+				<controls:PuzzlePiece 
+					Name="LeadingTemplate" 
+					Classes = "Leading" 
+					TabFill="BlueViolet" 
+					Stroke="DarkBlue"  
+					PointerPressed="OnPointerPressed"/>
+				<controls:PuzzlePiece 
+					Name="SlaveTemplate"   
+					Classes = "Slave"   
+					TabFill="LightGreen" 
+					Stroke="Green" 
+					PointerPressed="OnPointerPressed"/>
 			</StackPanel>
 		</Border>
 		<Border Classes="HeaderBorder"
-				 Grid.Row="1" Grid.Column="1">
-			
+				 Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+			<Panel>
+				<controls:MainBlock TabFill="Violet" Margin="40"/>
+			<Canvas Name="WorkCanvas"/>
+			</Panel>
 		</Border>
+		<Border Classes="HeaderBorder" Grid.Column="1" Grid.Row="2">
+			<StackPanel Orientation="Horizontal" Spacing="40" HorizontalAlignment="Center">
+				<Button Content="Serialize" Width="100" HorizontalContentAlignment="Center"/>
+				<Button Content="Deserialize"  Width="100" HorizontalContentAlignment="Center"/>
+				
+			</StackPanel>
+		</Border>
+		<Canvas Name="MainCanvas" Grid.Row="1" Grid.ColumnSpan="2"/>
 	</Grid>
 </UserControl>

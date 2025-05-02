@@ -132,5 +132,9 @@ namespace Puzzles.Models
             return base.Equals(obj);
         }
 
+        public PieceConfig Clone()
+        {
+            return new PieceConfig(Left, Top, Right, Bottom);
+        }
     }
 }

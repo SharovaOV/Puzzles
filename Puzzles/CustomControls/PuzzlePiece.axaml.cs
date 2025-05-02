@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using System.Runtime.Intrinsics.X86;
+using System.Text.RegularExpressions;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -19,20 +21,21 @@ public class PuzzlePiece : TemplatedControl
     private Canvas? _parentCanvas;
     private Border? _dragHandle;
     private Path? _pazzlePath;
+    private TextBox _textBox;
     private double _yStart;
     private double _yEnd;
     public static readonly StyledProperty<IBrush> TabFillProperty =
-        AvaloniaProperty.Register<PuzzlePiece, IBrush>(nameof(TabFill), Brushes.Violet);
+        AvaloniaProperty.Register<PuzzlePiece, IBrush>(nameof(TabFill));
 
     public static readonly StyledProperty<IBrush> StrokeProperty =
-        AvaloniaProperty.Register<PuzzlePiece, IBrush>(nameof(Stroke), Brushes.DarkViolet);
+        AvaloniaProperty.Register<PuzzlePiece, IBrush>(nameof(Stroke));
 
 
     public static readonly StyledProperty<double> StrokeThicknessProperty =
         AvaloniaProperty.Register<PuzzlePiece, double>(nameof(StrokeThickness), 1.5);
 
     public static readonly StyledProperty<string> TextProperty =
-        AvaloniaProperty.Register<PuzzlePiece, string>(nameof(Text));
+        AvaloniaProperty.Register<PuzzlePiece, string>(nameof(Text), defaultBindingMode: Avalonia.Data.BindingMode.TwoWay);
 
 
    
@@ -93,9 +96,17 @@ public class PuzzlePiece : TemplatedControl
     {
         base.OnApplyTemplate(e);
         _pazzlePath = e.NameScope.Get<Path>("PART_PazzlePath");
+        _textBox = e.NameScope.Get<TextBox>("TextElement");
+        _textBox.TextChanged += TextBox_TextChanged;
     }
 
+    private void TextBox_TextChanged(object? sender, TextChangedEventArgs e)
+    {
+        TextBox textBox = (TextBox)sender;
+        if (string.IsNullOrEmpty(textBox.Text)) return;
 
+        textBox.Text = Regex.Replace(textBox.Text, @"[^a-zA-Z0-9]", "");
+    }
 
     protected override void OnSizeChanged(SizeChangedEventArgs e)
     {
@@ -123,7 +134,7 @@ public class PuzzlePiece : TemplatedControl
             CreateBottomEdge(ctx, leftPoint, segmentSize);
 
             CreateLeftEdge(ctx, topPoint, segmentSize);
-
+            
             return data;
         }
         return null;
@@ -131,7 +142,7 @@ public class PuzzlePiece : TemplatedControl
 
     private void CreateTopEdge(StreamGeometryContext ctx, double leftPoint, double segmentSize)
     {
-        double startX =(PieceForm.Left == Enums.EdgeType.None || PieceForm.Top == Enums.EdgeType.None)?CornerRadius.TopLeft : 0.5 * segmentSize;
+        double startX =(PieceForm.Left == Enums.EdgeType.None || PieceForm.Top == Enums.EdgeType.None)? 0.5 * segmentSize+CornerRadius.TopLeft : 0.5 * segmentSize;
         _yStart = 0.5 * segmentSize;
         ctx.BeginFigure(new Point(startX, _yStart), true);
         ctx.LineTo(new Point(leftPoint, _yStart));
@@ -157,7 +168,7 @@ public class PuzzlePiece : TemplatedControl
             ctx.LineTo(new Point(leftPoint +  segmentSize, _yStart));
         }
 
-        //if() Логика скругления
+        //if() Логика скругления Если понадобится
         ctx.LineTo(new Point(this.Bounds.Width-0.5*segmentSize, _yStart));
     }
 
@@ -274,6 +285,7 @@ public class PuzzlePiece : TemplatedControl
             }
         }
     }
+   
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
