@@ -45,8 +45,7 @@
 		<Border Classes="HeaderBorder" Grid.Column="1" Grid.Row="2">
 			<StackPanel Orientation="Horizontal" Spacing="40" HorizontalAlignment="Center">
 				<Button Content="Serialize" Width="100" HorizontalContentAlignment="Center"/>
-				<Button Content="Deserialize"  Width="100" HorizontalContentAlignment="Center"/>
-				
+				<Button Content="Deserialize"  Width="100" HorizontalContentAlignment="Center"/>				
 			</StackPanel>
 		</Border>
 		<Canvas Name="MainCanvas" Grid.Row="1" Grid.ColumnSpan="2"/>

@@ -11,9 +11,9 @@ namespace Puzzles.Views;
 
 public partial class MainView : UserControl
 {
-    private Control _draggedControl;
+    private Control? _draggedControl;
     private bool _isDragging;
-    private Point _dragStartPosition;
+    private Point? _dragStartPosition;
 
     public MainView()
     {

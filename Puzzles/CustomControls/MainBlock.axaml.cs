@@ -16,7 +16,7 @@ public class MainBlock : TemplatedControl
     private const double CORNER_RADIUS = 10;
     private const double RADIUS_SLOT_CORNER = 5;
 
-    private Path _pazzlePath;
+    private Path? _pazzlePath;
 
     public static readonly StyledProperty<IBrush> TabFillProperty =
         AvaloniaProperty.Register<PuzzlePiece, IBrush>(nameof(TabFill));

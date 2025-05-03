@@ -66,7 +66,6 @@ namespace Puzzles.Models
             Bottom = bottom;
         }
 
-
         public void SetValues(string uniformEdgeString)
         {
             if (Enum.TryParse<EdgeType>(uniformEdgeString, out EdgeType uniformEdge))
@@ -135,6 +134,17 @@ namespace Puzzles.Models
         public PieceConfig Clone()
         {
             return new PieceConfig(Left, Top, Right, Bottom);
+        }
+
+        public EdgeType GetEdgeType(SideType sideType)
+        {
+            return sideType switch
+            { 
+                SideType.Left => Left,
+                SideType.Top => Top,
+                SideType.Right => Right,
+                SideType.Bottom => Bottom
+            };
         }
     }
 }

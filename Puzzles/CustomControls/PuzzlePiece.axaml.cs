@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Intrinsics.X86;
 using System.Text.RegularExpressions;
@@ -9,6 +10,7 @@ using Avalonia.Controls.Shapes;
 using Avalonia.Input;
 using Avalonia.Media;
 using Puzzles.Converters;
+using Puzzles.Enums;
 using Puzzles.Models;
 
 namespace Puzzles.CustomControls;
@@ -16,14 +18,39 @@ namespace Puzzles.CustomControls;
 public class PuzzlePiece : TemplatedControl
 {
     private const double RADIUS_SLOT_CORNER = 5;
-    private Point _startPoint;
-    private bool _isDragging;
-    private Canvas? _parentCanvas;
-    private Border? _dragHandle;
     private Path? _pazzlePath;
-    private TextBox _textBox;
+    private TextBox? _textBox;
     private double _yStart;
     private double _yEnd;
+
+    // Ссылки на соединенные пазлы
+    public PuzzlePiece? MasterPiece { get; set; } // Ведущий
+    public List<PuzzlePiece> SlavePieces { get; } = new(); // Ведомые
+
+    // Позиция соединения (если ведомый)
+    public Point? ConnectionPoint { get; set; }
+
+    // Проверка возможности соединения
+    public bool CanConnectTo(PuzzlePiece target, SideType sourceSide)
+    {
+        var targetEdge = GetOppositeEdge(sourceSide);
+        return (int)PieceForm.GetEdgeType(sourceSide) + (int)target.PieceForm.GetEdgeType(sourceSide) == 3;
+    }
+
+    private SideType GetOppositeEdge(SideType side)
+    {
+        return side switch
+        {
+            SideType.Left => SideType.Right,
+            SideType.Right => SideType.Left,
+            SideType.Top => SideType.Bottom,
+            SideType.Bottom => SideType.Top,
+            _ => side
+        };
+    }
+
+
+
     public static readonly StyledProperty<IBrush> TabFillProperty =
         AvaloniaProperty.Register<PuzzlePiece, IBrush>(nameof(TabFill));
 
@@ -118,7 +145,7 @@ public class PuzzlePiece : TemplatedControl
     }
 
 
-    private Geometry CreatePathData()
+    private Geometry? CreatePathData()
     {
         var data = new StreamGeometry();
         double topPoint = 50;
@@ -287,19 +314,5 @@ public class PuzzlePiece : TemplatedControl
     }
    
 
-    protected override void OnPointerPressed(PointerPressedEventArgs e)
-    {
-        base.OnPointerPressed(e);
-    }
-
-    protected override void OnPointerMoved(PointerEventArgs e)
-    {
-        base.OnPointerMoved(e);
-    }
-
-    protected override void OnPointerReleased(PointerReleasedEventArgs e)
-    {
-        base.OnPointerReleased(e);
-    }
 
 }
