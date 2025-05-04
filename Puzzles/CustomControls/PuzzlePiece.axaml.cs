@@ -23,32 +23,11 @@ public class PuzzlePiece : TemplatedControl
     private double _yStart;
     private double _yEnd;
 
-    // Ссылки на соединенные пазлы
-    public PuzzlePiece? MasterPiece { get; set; } // Ведущий
-    public List<PuzzlePiece> SlavePieces { get; } = new(); // Ведомые
+
+    //public PuzzlePiece SlavePieces { get; } = new(); // Ведомые
 
     // Позиция соединения (если ведомый)
-    public Point? ConnectionPoint { get; set; }
-
-    // Проверка возможности соединения
-    public bool CanConnectTo(PuzzlePiece target, SideType sourceSide)
-    {
-        var targetEdge = GetOppositeEdge(sourceSide);
-        return (int)PieceForm.GetEdgeType(sourceSide) + (int)target.PieceForm.GetEdgeType(sourceSide) == 3;
-    }
-
-    private SideType GetOppositeEdge(SideType side)
-    {
-        return side switch
-        {
-            SideType.Left => SideType.Right,
-            SideType.Right => SideType.Left,
-            SideType.Top => SideType.Bottom,
-            SideType.Bottom => SideType.Top,
-            _ => side
-        };
-    }
-
+    public Point? ConnectionPoint { get; set; }   
 
 
     public static readonly StyledProperty<IBrush> TabFillProperty =
@@ -64,27 +43,48 @@ public class PuzzlePiece : TemplatedControl
     public static readonly StyledProperty<string> TextProperty =
         AvaloniaProperty.Register<PuzzlePiece, string>(nameof(Text), defaultBindingMode: Avalonia.Data.BindingMode.TwoWay);
 
+    public static readonly StyledProperty<PieceInfo> PuzzleConfigProperty =
+        AvaloniaProperty.Register<PuzzlePiece, PieceInfo>(nameof(PuzzleConfig), null);
 
-   
+
+    public static readonly StyledProperty<PuzzlePiece?> MasterPieceProperty =
+        AvaloniaProperty.Register<PuzzlePiece, PuzzlePiece?>(nameof(MasterPiece), null);
+
+
+    public static readonly StyledProperty<PuzzlePiece?[]> SlavePiecesProperty =
+        AvaloniaProperty.Register<PuzzlePiece, PuzzlePiece?[]>(nameof(SlavePieces), new PuzzlePiece[4]);
+
+    public PuzzlePiece?[] SlavePieces
+    {
+        get => this.GetValue(SlavePiecesProperty);
+        set => SetValue(SlavePiecesProperty, value);
+    }
+
+    public PuzzlePiece? MasterPiece
+    {
+        get => this.GetValue(MasterPieceProperty);
+        set => SetValue(MasterPieceProperty, value);
+    }
+
+
     public static readonly StyledProperty<PieceConfig> PieceFormProperty =
         AvaloniaProperty.Register<PuzzlePiece, PieceConfig>(nameof(PieceForm),
             new PieceConfig(Enums.EdgeType.Tab),
             validate: v => v != null,
             coerce: (_, value) => value ?? new PieceConfig(Enums.EdgeType.Tab)
            );
-
     
     public PieceConfig PieceForm
     {
         get => this.GetValue(PieceFormProperty);
         set => SetValue(PieceFormProperty, value);
     }
+
     // Дополнительный сеттер специально для строковых значений
     public void SetPieceForm(string formString)
     {
         SetValue(PieceFormProperty, PieceConfig.ParsePieceForm(formString));
     }
-
 
     public IBrush TabFill
     {
@@ -109,6 +109,13 @@ public class PuzzlePiece : TemplatedControl
         get => this.GetValue(TextProperty);
         set => SetValue(TextProperty, value);
     }
+    
+    public PieceInfo PuzzleConfig
+    {
+        get => this.GetValue(PuzzleConfigProperty);
+        set => SetValue(PuzzleConfigProperty, value);
+    }
+    
     private static void OnPieceFormChanged(AvaloniaPropertyChangedEventArgs args)
     {
         if (args.Sender is PuzzlePiece control && args.NewValue is string strValue)
@@ -117,7 +124,6 @@ public class PuzzlePiece : TemplatedControl
             control.SetValue(PieceFormProperty, PieceConfig.ParsePieceForm(strValue));
         }
     }
-
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
@@ -156,6 +162,7 @@ public class PuzzlePiece : TemplatedControl
         using (var ctx = data.Open())
         {
             CreateTopEdge(ctx, leftPoint, segmentSize);
+
             CreateRightEdge(ctx, topPoint, segmentSize);
 
             CreateBottomEdge(ctx, leftPoint, segmentSize);
@@ -311,8 +318,82 @@ public class PuzzlePiece : TemplatedControl
                 _pazzlePath.Data = CreatePathData();
             }
         }
+        else if(change.Property == MasterPieceProperty)
+        {
+            PuzzleConfig.ParentId = (MasterPiece != null)? MasterPiece.PuzzleConfig.Id:0;
+        }
     }
    
+    public void Extract()
+    {
+        if (PuzzleConfig == null) return;
+        ExtractAsMainPiece();
+        MasterExtract();
+        foreach(PuzzlePiece slavePiece in SlavePieces)
+        {
+            if(slavePiece != null)
+            {
+                RemoveSlave(slavePiece);
+            }
+        }
+    }
 
+    public void AddSlave(PuzzlePiece slave)
+    {
+        if (PuzzleConfig == null) return;
+        slave.MasterPiece = this;
+        SlavePieces[(int)slave.PuzzleConfig.SideOfParent] = slave;
+        PuzzleConfig.ChieldrenId[(int)slave.PuzzleConfig.SideOfParent] = slave.PuzzleConfig.Id;
+    }
+    public void RemoveSlave(PuzzlePiece slave)
+    {
+        if (PuzzleConfig == null) return;
+        slave.MasterPiece = null;
+        SlavePieces[(int)slave.PuzzleConfig.SideOfParent] = null;
+        PuzzleConfig.ChieldrenId[(int)slave.PuzzleConfig.SideOfParent] = 0;
+        slave.Extract();
+    }
+
+    public void SetAsMainPiece()
+    {
+        Extract();
+        PuzzleConfig.IsFirstPies = true;
+        PuzzleConfig.ParentId = -1;
+    }
+    public void ExtractAsMainPiece()
+    {
+        if (!PuzzleConfig.IsFirstPies) return;
+        PuzzleConfig.ParentId = 0;
+    }
+    public void MasterExtract()
+    {
+        if (PuzzleConfig == null || MasterPiece == null) return;
+        MasterPiece.RemoveSlave(this);
+    }
+
+    public PuzzlePiece Clone()
+    {
+        return new PuzzlePiece
+        {
+            Width = Width,
+            Height = Height,
+            TabFill = TabFill,
+            Stroke = Stroke,
+            //Background = original.Background,
+            PieceForm = PieceForm.Clone(),
+
+            PuzzleConfig = new PieceInfo
+            (
+                Enum.Parse<PieceType>(this.Classes.First(x => x != "dragging" && !x.Contains(":"))),
+                TabFill,
+                Stroke,
+                Text
+             )
+            {
+                Width = Width,
+                Height = Height
+            }
+        };
+    }
 
 }

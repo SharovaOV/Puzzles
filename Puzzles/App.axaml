@@ -17,6 +17,7 @@
 		<StyleInclude Source="/Assets/Styles/BorderStyles.axaml"/>
 		<StyleInclude Source="/CustomControls/PuzzlePiece.axaml"/>
 		<StyleInclude Source="/CustomControls/MainBlock.axaml"/>
+		<StyleInclude Source="/CustomControls/Backlight.axaml"/>
 		
     </Application.Styles>
 </Application>

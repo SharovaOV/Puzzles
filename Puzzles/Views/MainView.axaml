@@ -35,11 +35,12 @@
 					PointerPressed="OnPointerPressed"/>
 			</StackPanel>
 		</Border>
-		<Border Classes="HeaderBorder"
+		<Border Classes="HeaderBorder" Padding="40"
 				 Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-			<Panel>
-				<controls:MainBlock TabFill="Violet" Margin="40"/>
-			<Canvas Name="WorkCanvas"/>
+			<Panel >
+				<Canvas Name="BacklightCanvas" />
+				<controls:MainBlock Name="MainBlock" TabFill="Violet" />
+				<Canvas Name="WorkCanvas"/>
 			</Panel>
 		</Border>
 		<Border Classes="HeaderBorder" Grid.Column="1" Grid.Row="2">
