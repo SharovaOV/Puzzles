@@ -13,11 +13,11 @@ namespace Puzzles.Models
     {
         protected static int _lastId = 1;
         public int Id { get; set; }
-        public PieceType PersonalPieceType { get; private set; }
+        public PieceType PersonalPieceType { get; set; }
         public SideType SideOfParent { get; set; }
         public int ParentId { get; set; } = 0;
         public int[] ChieldrenId { get;  set; } = new int[4];
-        public bool[] CanHaveChields { get; private set; } = new bool[4];
+        public bool[] CanHaveChields { get; set; } = new bool[4];
         public bool IsFirstPies { get; set; } = false;
         public string Text { get; set; }
         public double X { get; set; } = 0;
@@ -38,7 +38,7 @@ namespace Puzzles.Models
             else
                 SlaveInit();
         }
-
+        public PieceInfo() { }
         private void LeadingInit()
         {
             PersonalPieceType = PieceType.Leading;

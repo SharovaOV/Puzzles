@@ -27,6 +27,25 @@ public partial class MainView : UserControl
     public MainView()
     {
         InitializeComponent();
+        
+    }
+
+    protected override void OnDataContextChanged(EventArgs e)
+    {
+        base.OnDataContextChanged(e);
+        if (DataContext is MainViewModel viewModel)
+        {
+            viewModel.RegisterCanvases(WorkCanvas);
+            viewModel.Deserialize += ViewModel_Deserialize;
+        }
+    }
+
+    private void ViewModel_Deserialize()
+    {
+        foreach(Control control in WorkCanvas.Children)
+        {
+            control.PointerPressed += Clone_OnPointerPressed;
+        }
     }
 
     private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
@@ -50,7 +69,7 @@ public partial class MainView : UserControl
             MainCanvas.Children.Add(puzzlePiece);
 
             _currentSize = new(puzzlePiece.Width, puzzlePiece.Height);
-            puzzlePiece.Extract();
+            //puzzlePiece.Extract();
             // Ќачинаем перетаскивание копии
             StartDrag(puzzlePiece, e);
         }
@@ -88,7 +107,6 @@ public partial class MainView : UserControl
             // захват курсора
             e.Pointer.Capture(inputElement);            
             clone.Classes.Add("dragging");
-            ViewModel?.DragStartedCommand.Execute(null);
             MainCanvas.PointerMoved += MainCanvas_PointerMoved;
             MainCanvas.PointerReleased += MainCanvas_PointerReleased;
             Control? b;

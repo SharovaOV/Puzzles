@@ -82,7 +82,6 @@ namespace Puzzles.Models
             SetValues(horizontalEdge, verticalEdge);
         }       
 
-
         public void SetValues(string leftString, string topString, string rightString, string bottomString)
         {
             if (!Enum.TryParse<EdgeType>(leftString, out EdgeType left) ||

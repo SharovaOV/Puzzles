@@ -12,6 +12,7 @@ using Avalonia.Media;
 using Puzzles.Converters;
 using Puzzles.Enums;
 using Puzzles.Models;
+using static Puzzles.ProgramData;
 
 namespace Puzzles.CustomControls;
 
@@ -22,6 +23,8 @@ public class PuzzlePiece : TemplatedControl
     private TextBox? _textBox;
     private double _yStart;
     private double _yEnd;
+
+    private Button _paletteBtn;
 
 
     //public PuzzlePiece SlavePieces { get; } = new(); // Ведомые
@@ -129,8 +132,19 @@ public class PuzzlePiece : TemplatedControl
     {
         base.OnApplyTemplate(e);
         _pazzlePath = e.NameScope.Get<Path>("PART_PazzlePath");
+
         _textBox = e.NameScope.Get<TextBox>("TextElement");
         _textBox.TextChanged += TextBox_TextChanged;
+
+        _paletteBtn = e.NameScope.Get<Button>("PaletteButton");
+        _paletteBtn.Click += PaletteButton_Click;
+    }
+
+    private void PaletteButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+       (TabFill, Stroke) =  GetRandomColorPair();
+        DrawingPath();
+        SetSlaveCollors(TabFill, Stroke);
     }
 
     private void TextBox_TextChanged(object? sender, TextChangedEventArgs e)
@@ -144,20 +158,23 @@ public class PuzzlePiece : TemplatedControl
     protected override void OnSizeChanged(SizeChangedEventArgs e)
     {
         base.OnSizeChanged(e);
+        
+            DrawingPath();
+    }
+
+    public void DrawingPath()
+    {
         if (_pazzlePath != null)
         {
             _pazzlePath.Data = CreatePathData();
         }
     }
-
-
     private Geometry? CreatePathData()
     {
         var data = new StreamGeometry();
         double topPoint = 50;
         double leftPoint = 40;
         double segmentSize = 20;
-        //double halfSegment = Math.Min(this.Bounds.Height, this.Bounds.Height) / 2;
         if (PieceForm is null) return null;
         using (var ctx = data.Open())
         {
@@ -311,7 +328,8 @@ public class PuzzlePiece : TemplatedControl
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if(change.Property == PieceFormProperty)
+        PuzzleConfigUpdate();
+        if (change.Property == PieceFormProperty)
         {
             if (_pazzlePath != null)
             {
@@ -328,26 +346,29 @@ public class PuzzlePiece : TemplatedControl
     {
         if (PuzzleConfig == null) return;
         ExtractAsMainPiece();
-        MasterExtract();
-        foreach(PuzzlePiece slavePiece in SlavePieces)
+        ExtractMaster();
+        foreach (PuzzlePiece slavePiece in SlavePieces)
         {
-            if(slavePiece != null)
-            {
-                RemoveSlave(slavePiece);
-            }
+           RemoveSlave(slavePiece);
         }
     }
 
     public void AddSlave(PuzzlePiece slave)
     {
-        if (PuzzleConfig == null) return;
+        if (slave == null || PuzzleConfig == null) return;
         slave.MasterPiece = this;
+        if(slave.PuzzleConfig.PersonalPieceType == PieceType.Slave)
+        {
+            slave.TabFill = this.TabFill;
+            slave.Stroke = this.Stroke;
+            slave.Text = this.Text;
+        }
         SlavePieces[(int)slave.PuzzleConfig.SideOfParent] = slave;
         PuzzleConfig.ChieldrenId[(int)slave.PuzzleConfig.SideOfParent] = slave.PuzzleConfig.Id;
     }
     public void RemoveSlave(PuzzlePiece slave)
     {
-        if (PuzzleConfig == null) return;
+        if (slave == null || PuzzleConfig == null) return;
         slave.MasterPiece = null;
         SlavePieces[(int)slave.PuzzleConfig.SideOfParent] = null;
         PuzzleConfig.ChieldrenId[(int)slave.PuzzleConfig.SideOfParent] = 0;
@@ -356,7 +377,6 @@ public class PuzzlePiece : TemplatedControl
 
     public void SetAsMainPiece()
     {
-        Extract();
         PuzzleConfig.IsFirstPies = true;
         PuzzleConfig.ParentId = -1;
     }
@@ -364,11 +384,11 @@ public class PuzzlePiece : TemplatedControl
     {
         if (!PuzzleConfig.IsFirstPies) return;
         PuzzleConfig.ParentId = 0;
+        PuzzleConfig.IsFirstPies = false;
     }
-    public void MasterExtract()
+    public void ExtractMaster()
     {
-        if (PuzzleConfig == null || MasterPiece == null) return;
-        MasterPiece.RemoveSlave(this);
+        MasterPiece?.RemoveSlave(this);
     }
 
     public PuzzlePiece Clone()
@@ -381,7 +401,6 @@ public class PuzzlePiece : TemplatedControl
             Stroke = Stroke,
             //Background = original.Background,
             PieceForm = PieceForm.Clone(),
-
             PuzzleConfig = new PieceInfo
             (
                 Enum.Parse<PieceType>(this.Classes.First(x => x != "dragging" && !x.Contains(":"))),
@@ -394,6 +413,46 @@ public class PuzzlePiece : TemplatedControl
                 Height = Height
             }
         };
+    }
+
+    public void SetSlaveCollors(IBrush fill, IBrush stroke)
+    {
+        foreach(PuzzlePiece slave in SlavePieces)
+        {
+            if(slave !=null && slave.PuzzleConfig.PersonalPieceType == PieceType.Slave)
+            {
+                slave.TabFill = fill;
+                slave.Stroke = stroke;
+                slave.DrawingPath();
+            }
+        }
+    }
+
+    void PuzzleConfigUpdate()
+    {
+        if (PuzzleConfig == null) return;
+        PuzzleConfig.Width = this.Bounds.Width;
+        PuzzleConfig.Height = this.Bounds.Height;
+        PuzzleConfig.Color = TabFill;
+        PuzzleConfig.StrokeColor = Stroke;
+        PuzzleConfig.Text = Text;
+    }
+
+    public static PuzzlePiece CreateFromPuzzleConfig(PieceInfo puzzleConfig)
+    {
+        PuzzlePiece puzzlePiece = new PuzzlePiece
+        {
+            Width = puzzleConfig.Width,
+            Height = puzzleConfig.Height,
+            TabFill = puzzleConfig.Color,
+            Stroke = puzzleConfig.StrokeColor,
+            Text = puzzleConfig.Text,
+            PuzzleConfig = puzzleConfig
+        };
+        var s = $"{puzzleConfig.PersonalPieceType}";
+        puzzlePiece.Classes.Add($"{puzzleConfig.PersonalPieceType}");
+
+        return puzzlePiece;
     }
 
 }
