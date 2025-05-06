@@ -12,7 +12,15 @@ namespace Puzzles.Models
     public partial class PieceInfo : ObservableObject, IDisposable
     {
         protected static int _lastId = 1;
-        public int Id { get; set; }
+        private int _id =0 ;
+        public int Id { 
+            get =>_id; 
+            set 
+            { 
+                _id = value;  
+                _lastId = int.Max(_lastId, value) + 1; 
+            } 
+        }
         public PieceType PersonalPieceType { get; set; }
         public SideType SideOfParent { get; set; }
         public int ParentId { get; set; } = 0;

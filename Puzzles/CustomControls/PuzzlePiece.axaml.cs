@@ -440,8 +440,8 @@ public class PuzzlePiece : TemplatedControl
     void PuzzleConfigUpdate()
     {
         if (PuzzleConfig == null) return;
-        PuzzleConfig.Width = this.Bounds.Width;
-        PuzzleConfig.Height = this.Bounds.Height;
+        PuzzleConfig.Width = (Bounds.Width > 0) ? Bounds.Width : PuzzleConfig.Width;
+        PuzzleConfig.Height = (Bounds.Height > 0) ? Bounds.Height : PuzzleConfig.Height;
         PuzzleConfig.Color = TabFill;
         PuzzleConfig.StrokeColor = Stroke;
         PuzzleConfig.Text = Text;

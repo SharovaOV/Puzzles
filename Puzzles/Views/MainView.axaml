@@ -37,10 +37,10 @@
 		</Border>
 		<Border Classes="HeaderBorder" Padding="40"
 				 Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-			<Panel >
-				<Canvas Name="BacklightCanvas" />
-				<controls:MainBlock Name="MainBlock" TabFill="Violet" />
-				<Canvas Name="WorkCanvas"/>
+			<Panel  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+				<Canvas Name="BacklightCanvas"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+				<controls:MainBlock Name="MainBlock" TabFill="Violet"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+				<Canvas Name="WorkCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 			</Panel>
 		</Border>
 		<Border Classes="HeaderBorder" Grid.Column="1" Grid.Row="2">
