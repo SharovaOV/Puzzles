@@ -1,0 +1,36 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	    xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:converters="clr-namespace:Puzzles.Converters"
+        xmlns:controls="clr-namespace:Puzzles.CustomControls">
+	<Design.PreviewWith>
+		<StackPanel Spacing="10">
+			<controls:MainBlock />
+		</StackPanel>
+	</Design.PreviewWith>
+	<Style Selector="controls|MainBlock">
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Border Background="Transparent"
+						ClipToBounds="False">
+					<Panel>
+						<Path Name="PART_PazzlePath"
+							  Fill="{TemplateBinding TabFill}"
+							  Stroke="{TemplateBinding Stroke}"
+							  StrokeThickness="{TemplateBinding StrokeThickness}"
+							  />
+						<StackPanel Orientation="Vertical" Spacing="5" Margin="40 20">
+							<TextBlock Text="Главный блок"   FontSize="18" HorizontalAlignment="Center"/>
+						</StackPanel>
+					</Panel>
+				</Border>
+			</ControlTemplate>
+			</Setter>
+		<Setter Property="Stroke" Value="DarkViolet"/>
+		<Setter Property="StrokeThickness" Value="1"/>
+		<Style Selector="^ TextBlock">
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+		</Style>
+	</Style>
+</Styles>

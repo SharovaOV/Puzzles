@@ -1,5 +1,6 @@
 <Application xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"			 
+			 xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              x:Class="Puzzles.App"
              xmlns:local="using:Puzzles"
              RequestedThemeVariant="Default">
@@ -10,6 +11,13 @@
     </Application.DataTemplates>
   
     <Application.Styles>
+		
         <FluentTheme />
+		<materialIcons:MaterialIconStyles />
+		<StyleInclude Source="/Assets/Styles/BorderStyles.axaml"/>
+		<StyleInclude Source="/CustomControls/PuzzlePiece.axaml"/>
+		<StyleInclude Source="/CustomControls/MainBlock.axaml"/>
+		<StyleInclude Source="/CustomControls/Backlight.axaml"/>
+		
     </Application.Styles>
 </Application>

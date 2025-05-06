@@ -1,0 +1,24 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:Puzzles.CustomControls">
+	<Design.PreviewWith>
+		<StackPanel Spacing="10">
+			<controls:Backlight />
+		</StackPanel>
+	</Design.PreviewWith>
+	<Style Selector="controls|Backlight">
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Border Background="{TemplateBinding Background}"  
+						BorderBrush="{TemplateBinding BorderBrush}" 
+						BorderThickness="{TemplateBinding BorderThickness}"
+						/>
+				</ControlTemplate>
+			</Setter>
+		<Setter Property="Background" Value="Gold"/>
+		<Setter Property="BorderBrush" Value="Goldenrod"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="Height" Value="120"/>
+		<Setter Property="Width" Value="280"/>
+		</Style>
+</Styles>

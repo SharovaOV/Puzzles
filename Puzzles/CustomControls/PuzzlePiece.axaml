@@ -1,0 +1,78 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	    xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:converters="clr-namespace:Puzzles.Converters"
+        xmlns:controls="clr-namespace:Puzzles.CustomControls">
+	<Design.PreviewWith>
+		<StackPanel Spacing="10">
+			<controls:PuzzlePiece Classes = "Leading" TabFill="BlueViolet" Stroke="Red" StrokeThickness="1"
+								  PieceForm="Slot None" Width="200" Height="200"/>
+		</StackPanel>
+	</Design.PreviewWith>
+	<Style Selector="controls|PuzzlePiece">
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Border Name="PART_DragHandle"
+						Background="Transparent"
+						ClipToBounds="False">
+					<Panel>
+						<Path Name="PART_PazzlePath"
+							  Fill="{TemplateBinding TabFill}"
+							  Stroke="{TemplateBinding Stroke}"
+							  StrokeThickness="{TemplateBinding StrokeThickness}"
+							  />
+						<StackPanel Orientation="Vertical" Spacing="5" Margin="40 20">
+							<TextBlock Text="Ведущий блок"  FontSize="18" HorizontalAlignment="Center"/>
+							<Grid ColumnDefinitions="* 10 auto">
+								<TextBox Name="TextElement" Text="{TemplateBinding Text, Mode=TwoWay}"
+										 MaxLength="10"
+										 Grid.Row="1"
+										 Background="White"
+										   HorizontalAlignment="Stretch"
+										   VerticalAlignment="Top"
+										   TextWrapping="Wrap"
+										   FontSize="16"/>
+								<Button Grid.Column="2" Name="PaletteButton" Background="Transparent">
+									<materialIcons:MaterialIcon Kind="Palette" Height="25" Width="25"/>
+								</Button>
+							</Grid>
+						</StackPanel>
+					</Panel>
+					
+				</Border>
+			</ControlTemplate>			
+		</Setter>
+
+		<Setter Property="Height" Value="120"/>
+		<Setter Property="Width" Value="280"/>
+		<Setter Property="StrokeThickness" Value="1"/>
+		<Style Selector="^ TextBlock">
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+		</Style>
+		<Style Selector="^ TextBox">
+			<Setter Property="MaxHeight" Value="50"/>
+		</Style>
+		
+	</Style>
+
+	<Style Selector="controls|PuzzlePiece.Leading">
+		<Setter Property="PieceForm" Value="None Slot Slot Tab"/>
+		<Setter Property="CornerRadius" Value="10"/>
+		<Style Selector="^ TextBlock">
+			<Setter Property="Foreground" Value="White"/>
+			</Style>
+	</Style> 
+	<Style Selector="controls|PuzzlePiece.Slave">
+		<Setter Property="PieceForm" Value="Tab None None None"/>
+
+		<Style Selector="^ TextBlock">
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="Text" Value="Ведомый блок"/>
+		</Style>
+		<Style Selector="^ Button">
+			<Setter Property="IsVisible" Value="False"/>
+		</Style>
+	</Style> 
+	
+</Styles>
