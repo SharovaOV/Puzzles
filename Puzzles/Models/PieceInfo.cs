@@ -60,16 +60,10 @@ namespace Puzzles.Models
             SideOfParent = SideType.Right;
         }
 
-        public void RemoveParent()
-        {
-            ParentId = 0;
-            Text = string.Empty;
-        }
-
         public void Consolidate()
         {
-
-            Id = _lastId++;
+            if(Id == 0)
+                Id = _lastId++;
         }
         public void Dispose()
         {
