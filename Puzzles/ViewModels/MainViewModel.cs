@@ -75,7 +75,7 @@ namespace Puzzles.ViewModels
             freePieces = JsonConvert.DeserializeObject<List<PieceInfo>>(File.ReadAllText(_freePuzzlePath));
             
             CreateWorkPices(workPieces);
-            
+            CreateFreePices(freePieces);
 
             Deserialize?.Invoke();
         }

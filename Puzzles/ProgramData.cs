@@ -28,12 +28,19 @@ namespace Puzzles
         (Brushes.DarkOrange, new SolidColorBrush(Color.Parse("#FF8C00"))),
         (Brushes.Orange, new SolidColorBrush(Color.Parse("#CD8500"))),
         
+        //// Желтые (5 пар)
+        //(Brushes.Gold, new SolidColorBrush(Color.Parse("#CDAD00"))),
+        //(Brushes.Yellow, new SolidColorBrush(Color.Parse("#CDCD00"))),
+        //(Brushes.LightYellow, new SolidColorBrush(Color.Parse("#EEE8AA"))),
+        //(Brushes.LemonChiffon, new SolidColorBrush(Color.Parse("#CDC9A5"))),
+        //(Brushes.PaleGoldenrod, new SolidColorBrush(Color.Parse("#EEE8AA"))),
+
         // Желтые (5 пар)
-        (Brushes.Gold, new SolidColorBrush(Color.Parse("#CDAD00"))),
-        (Brushes.Yellow, new SolidColorBrush(Color.Parse("#CDCD00"))),
-        (Brushes.LightYellow, new SolidColorBrush(Color.Parse("#EEE8AA"))),
-        (Brushes.LemonChiffon, new SolidColorBrush(Color.Parse("#CDC9A5"))),
-        (Brushes.PaleGoldenrod, new SolidColorBrush(Color.Parse("#EEE8AA"))),
+        (Brushes.Gold, Brushes.Goldenrod),
+        (Brushes.Yellow, Brushes.Goldenrod),
+        (Brushes.LightYellow, Brushes.Goldenrod),
+        (Brushes.LemonChiffon, Brushes.Goldenrod),
+        (Brushes.PaleGoldenrod, Brushes.Goldenrod),
         
         // Зеленые (5 пар)
         (Brushes.LightGreen, new SolidColorBrush(Color.Parse("#698B69"))),
@@ -42,12 +49,19 @@ namespace Puzzles
         (Brushes.SeaGreen, new SolidColorBrush(Color.Parse("#2E8B57"))),
         (Brushes.MediumSeaGreen, new SolidColorBrush(Color.Parse("#3CB371"))),
         
+        //// Голубые/бирюзовые (5 пар)
+        //(Brushes.Aqua, new SolidColorBrush(Color.Parse("#00CED1"))),
+        //(Brushes.Turquoise, new SolidColorBrush(Color.Parse("#40E0D0"))),
+        //(Brushes.MediumTurquoise, new SolidColorBrush(Color.Parse("#48D1CC"))),
+        //(Brushes.DarkTurquoise, new SolidColorBrush(Color.Parse("#00CED1"))),
+        //(Brushes.CadetBlue, new SolidColorBrush(Color.Parse("#5F9EA0"))),
+
         // Голубые/бирюзовые (5 пар)
-        (Brushes.Aqua, new SolidColorBrush(Color.Parse("#00CED1"))),
-        (Brushes.Turquoise, new SolidColorBrush(Color.Parse("#40E0D0"))),
-        (Brushes.MediumTurquoise, new SolidColorBrush(Color.Parse("#48D1CC"))),
-        (Brushes.DarkTurquoise, new SolidColorBrush(Color.Parse("#00CED1"))),
-        (Brushes.CadetBlue, new SolidColorBrush(Color.Parse("#5F9EA0"))),
+        (Brushes.Aqua, Brushes.Blue),
+        (Brushes.Turquoise, Brushes.Blue),
+        (Brushes.MediumTurquoise, Brushes.Blue),
+        (Brushes.DarkTurquoise, Brushes.Blue),
+        (Brushes.CadetBlue, Brushes.Blue),
         
         // Синие (5 пар)
         (Brushes.CornflowerBlue, new SolidColorBrush(Color.Parse("#6495ED"))),
