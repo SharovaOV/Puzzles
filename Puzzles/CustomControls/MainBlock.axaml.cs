@@ -6,6 +6,7 @@ using static System.Net.Mime.MediaTypeNames;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using System;
+using static Puzzles.ProgramData;
 
 namespace Puzzles.CustomControls;
 
@@ -67,8 +68,8 @@ public class MainBlock : TemplatedControl
     private Geometry? CreatePathData()
     {
         var data = new StreamGeometry();
-        double leftPoint = 30;
-        double segmentSize = 20;
+        double leftPoint = LEFT_POINT -0.5* SEGMENT_SIZE;
+        double segmentSize = SEGMENT_SIZE;
 
         using (var ctx = data.Open())
         {

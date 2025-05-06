@@ -173,19 +173,16 @@ public class PuzzlePiece : TemplatedControl
     private Geometry? CreatePathData()
     {
         var data = new StreamGeometry();
-        double topPoint = 50;
-        double leftPoint = 40;
-        double segmentSize = 20;
         if (PieceForm is null) return null;
         using (var ctx = data.Open())
         {
-            CreateTopEdge(ctx, leftPoint, segmentSize);
+            CreateTopEdge(ctx, LEFT_POINT, SEGMENT_SIZE);
 
-            CreateRightEdge(ctx, topPoint, segmentSize);
+            CreateRightEdge(ctx, TOP_POINT, SEGMENT_SIZE);
 
-            CreateBottomEdge(ctx, leftPoint, segmentSize);
+            CreateBottomEdge(ctx, LEFT_POINT, SEGMENT_SIZE);
 
-            CreateLeftEdge(ctx, topPoint, segmentSize);
+            CreateLeftEdge(ctx, TOP_POINT, SEGMENT_SIZE);
             
             return data;
         }
