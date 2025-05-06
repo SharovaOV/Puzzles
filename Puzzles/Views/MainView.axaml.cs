@@ -69,7 +69,7 @@ public partial class MainView : UserControl
             MainCanvas.Children.Add(puzzlePiece);
 
             _currentSize = new(puzzlePiece.Width, puzzlePiece.Height);
-            //puzzlePiece.Extract();
+            puzzlePiece.Extract();
             // Начинаем перетаскивание копии
             StartDrag(puzzlePiece, e);
         }
@@ -191,8 +191,11 @@ public partial class MainView : UserControl
                 Backlight backlight = control as Backlight;
                 if (backlight != null)
                 {
-                    if (backlight.ParentId != -1)
-                        ((PuzzlePiece)WorkCanvas.Children.First(x => ((PuzzlePiece)x).PuzzleConfig.Id == backlight.ParentId)).AddSlave(_draggedControl);
+                    if (backlight.ParentId != -1){
+                        PuzzlePiece parent = (PuzzlePiece)WorkCanvas.Children.First(x => ((PuzzlePiece)x).PuzzleConfig.Id == backlight.ParentId);
+                        Debug.WriteLine($"{parent.PuzzleConfig.Id}, {_draggedControl.PuzzleConfig.Id}");
+                        parent.AddSlave(_draggedControl);
+                    }
                     else _draggedControl.SetAsMainPiece();
                 }
                 break;

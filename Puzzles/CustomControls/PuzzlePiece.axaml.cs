@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Intrinsics.X86;
 using System.Text.RegularExpressions;
@@ -53,9 +54,8 @@ public class PuzzlePiece : TemplatedControl
     public static readonly StyledProperty<PuzzlePiece?> MasterPieceProperty =
         AvaloniaProperty.Register<PuzzlePiece, PuzzlePiece?>(nameof(MasterPiece), null);
 
-
     public static readonly StyledProperty<PuzzlePiece?[]> SlavePiecesProperty =
-        AvaloniaProperty.Register<PuzzlePiece, PuzzlePiece?[]>(nameof(SlavePieces), new PuzzlePiece[4]);
+        AvaloniaProperty.Register<PuzzlePiece, PuzzlePiece?[]>(nameof(SlavePieces), new PuzzlePiece?[4], coerce: (o, v) => v ?? new PuzzlePiece?[4]);
 
     public PuzzlePiece?[] SlavePieces
     {
@@ -68,7 +68,6 @@ public class PuzzlePiece : TemplatedControl
         get => this.GetValue(MasterPieceProperty);
         set => SetValue(MasterPieceProperty, value);
     }
-
 
     public static readonly StyledProperty<PieceConfig> PieceFormProperty =
         AvaloniaProperty.Register<PuzzlePiece, PieceConfig>(nameof(PieceForm),
@@ -138,6 +137,7 @@ public class PuzzlePiece : TemplatedControl
 
         _paletteBtn = e.NameScope.Get<Button>("PaletteButton");
         _paletteBtn.Click += PaletteButton_Click;
+        //SlavePieces = new PuzzlePiece[4];
     }
 
     private void PaletteButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -336,10 +336,10 @@ public class PuzzlePiece : TemplatedControl
                 _pazzlePath.Data = CreatePathData();
             }
         }
-        else if(change.Property == MasterPieceProperty)
-        {
-            PuzzleConfig.ParentId = (MasterPiece != null)? MasterPiece.PuzzleConfig.Id:0;
-        }
+        //else if(change.Property == MasterPieceProperty)
+        //{
+        //    PuzzleConfig.ParentId = (MasterPiece != null)? MasterPiece.PuzzleConfig.Id:0;
+        //}
     }
    
     public void Extract()
@@ -356,7 +356,9 @@ public class PuzzlePiece : TemplatedControl
     public void AddSlave(PuzzlePiece slave)
     {
         if (slave == null || PuzzleConfig == null) return;
-        slave.MasterPiece = this;
+        Debug.WriteLine($"AddSlave {slave.PuzzleConfig.Id} to {PuzzleConfig.Id}");
+        slave.SetMaster(this);
+
         if(slave.PuzzleConfig.PersonalPieceType == PieceType.Slave)
         {
             slave.TabFill = this.TabFill;
@@ -369,12 +371,16 @@ public class PuzzlePiece : TemplatedControl
     public void RemoveSlave(PuzzlePiece slave)
     {
         if (slave == null || PuzzleConfig == null) return;
-        slave.MasterPiece = null;
+        slave.SetMaster(null);
         SlavePieces[(int)slave.PuzzleConfig.SideOfParent] = null;
         PuzzleConfig.ChieldrenId[(int)slave.PuzzleConfig.SideOfParent] = 0;
         slave.Extract();
     }
-
+    public void SetMaster(PuzzlePiece master)
+    {
+        MasterPiece = master;
+        PuzzleConfig.ParentId = master?.PuzzleConfig.Id??0;
+    }
     public void SetAsMainPiece()
     {
         PuzzleConfig.IsFirstPies = true;
@@ -399,7 +405,7 @@ public class PuzzlePiece : TemplatedControl
             Height = Height,
             TabFill = TabFill,
             Stroke = Stroke,
-            //Background = original.Background,
+            SlavePieces = new PuzzlePiece[4],
             PieceForm = PieceForm.Clone(),
             PuzzleConfig = new PieceInfo
             (
@@ -410,9 +416,12 @@ public class PuzzlePiece : TemplatedControl
              )
             {
                 Width = Width,
-                Height = Height
+                Height = Height,
+                ParentId = 0,
+                ChieldrenId = new int[4]
             }
         };
+
     }
 
     public void SetSlaveCollors(IBrush fill, IBrush stroke)
@@ -447,6 +456,8 @@ public class PuzzlePiece : TemplatedControl
             TabFill = puzzleConfig.Color,
             Stroke = puzzleConfig.StrokeColor,
             Text = puzzleConfig.Text,
+            MasterPiece = null,
+            SlavePieces = new PuzzlePiece[4],
             PuzzleConfig = puzzleConfig
         };
         var s = $"{puzzleConfig.PersonalPieceType}";
