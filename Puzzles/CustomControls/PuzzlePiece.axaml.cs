@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.Intrinsics.X86;
 using System.Text.RegularExpressions;
 using Avalonia;
@@ -363,11 +364,11 @@ public class PuzzlePiece : TemplatedControl
         {
             slave.TabFill = this.TabFill;
             slave.Stroke = this.Stroke;
-            slave.Text = this.Text;
         }
         SlavePieces[(int)slave.PuzzleConfig.SideOfParent] = slave;
         PuzzleConfig.ChieldrenId[(int)slave.PuzzleConfig.SideOfParent] = slave.PuzzleConfig.Id;
     }
+   
     public void RemoveSlave(PuzzlePiece slave)
     {
         if (slave == null || PuzzleConfig == null) return;
@@ -380,6 +381,8 @@ public class PuzzlePiece : TemplatedControl
     {
         MasterPiece = master;
         PuzzleConfig.ParentId = master?.PuzzleConfig.Id??0;
+        if (MasterPiece != null && PuzzleConfig.PersonalPieceType == PieceType.Slave && _textBox != null)
+            _textBox.Text = MasterPiece.Text;
     }
     public void SetAsMainPiece()
     {
