@@ -47,6 +47,7 @@ namespace Puzzles.Services
         public void NavigateTo<T>() where T : ViewModelBase
         {
             CurrentViewModel = _services.GetRequiredService<T>();
+            CurrentView.DataContext = CurrentViewModel;
         }
     }
 }

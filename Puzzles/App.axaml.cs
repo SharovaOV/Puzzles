@@ -13,6 +13,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Puzzles.Services;
 using System;
+using System.IO;
+using Puzzles.Models;
+using static Puzzles.ConfigurationLoader;
 
 namespace Puzzles;
 
@@ -61,6 +64,18 @@ public partial class App : Application
     }
     private void ConfigureServices(IServiceCollection services)
     {
+
+        
+        var serializeFileNames = ConfigurationLoader.GetSection<SerializeFileNames>(LoadConfiguration());
+        if (serializeFileNames == null)
+        {
+            throw new ArgumentException("bankDetails is not configured");
+        }
+
+        services.AddSingleton(serializeFileNames); // Регистрируем как singleton
+
+        Directory.CreateDirectory(serializeFileNames.MainPath);
+
         services.AddSingleton<IDataTemplate, ViewLocator>();
         services.AddSingleton<INavigationService, NavigationService>();
 

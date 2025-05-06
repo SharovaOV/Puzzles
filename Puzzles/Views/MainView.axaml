@@ -2,7 +2,53 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:Puzzles.CustomControls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 xmlns:vm="using:Puzzles.ViewModels"
+			 x:DataType="vm:MainViewModel"			
              x:Class="Puzzles.Views.MainView">
-  Welcome to Avalonia!
+	
+	<Grid  Margin="20"
+		ColumnDefinitions="auto *" RowDefinitions="25 * 60">
+		
+		<Border Classes="HeaderBorder">
+			<TextBlock Text="Панель блоков"/>
+		</Border>
+		<Border Classes="HeaderBorder"
+				Grid.Row="0" Grid.Column="1">
+			<TextBlock Text="Панель блоков"/>
+		</Border>
+		<Border Name="Blocks" Classes="HeaderBorder"
+				 Grid.Row="1" Grid.Column="0" Grid.RowSpan="2">
+			<StackPanel Name="BlocksPanel" Margin="15">
+				<controls:PuzzlePiece 
+					Name="LeadingTemplate" 
+					Classes = "Leading" 
+					TabFill="BlueViolet" 
+					Stroke="DarkBlue"  
+					PointerPressed="OnPointerPressed"/>
+				<controls:PuzzlePiece 
+					Name="SlaveTemplate"   
+					Classes = "Slave"   
+					TabFill="LightGreen" 
+					Stroke="Green" 
+					PointerPressed="OnPointerPressed"/>
+			</StackPanel>
+		</Border>
+		<Border Classes="HeaderBorder" Padding="40"
+				 Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+			<Panel  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+				<Canvas Name="BacklightCanvas"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+				<controls:MainBlock Name="MainBlock" TabFill="Violet"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+				<Canvas Name="WorkCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+			</Panel>
+		</Border>
+		<Border Classes="HeaderBorder" Grid.Column="1" Grid.Row="2">
+			<StackPanel Orientation="Horizontal" Spacing="40" HorizontalAlignment="Center">
+				<Button Content="Serialize" Command="{Binding SaveCommand}" Width="100" HorizontalContentAlignment="Center"/>
+				<Button Content="Deserialize" Command="{Binding LoadCommand}"  Width="100" HorizontalContentAlignment="Center"/>				
+			</StackPanel>
+		</Border>
+		<Canvas Name="MainCanvas" Grid.Row="1" Grid.ColumnSpan="2"/>
+	</Grid>
 </UserControl>
